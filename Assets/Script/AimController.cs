@@ -31,6 +31,15 @@ public class AimController : MonoBehaviour
     public Vector3 bodyRightPosition;
     public Vector3 bodyLeftPosition;
 
+    [Header("shoot")]
+    public GameObject bullets;
+    public Animator gunAnim;
+    public Transform ShootPoint;
+    public float bulletspeed;
+    public float fireRates;
+    float ReadyForNextShot;
+    public CameraRecoil cameraRecoil;
+
     public bool IsAiming { get; private set; }
 
     void Start()
@@ -63,7 +72,20 @@ public class AimController : MonoBehaviour
         }
 
         if (IsAiming)
+        {
+            if(Input.GetMouseButton(0))
+                {
+                    if (Time.time > ReadyForNextShot)
+                    {
+                        ReadyForNextShot = Time.time + 1/fireRates;
+                        Shoot();
+                    }
+                    
+                }
             UpdateAimDirection();
+        }
+            
+
     }
 
     void SetAim(bool aiming)
@@ -158,5 +180,14 @@ public class AimController : MonoBehaviour
 
         playerBodyRenderer.transform.localPosition =
             faceRight ? bodyRightPosition : bodyLeftPosition;
+    }
+
+    void Shoot()
+    {
+        GameObject bulletIns = Instantiate(bullets, ShootPoint.position, ShootPoint.rotation);
+        bulletIns.GetComponent<Rigidbody2D>().AddForce(bulletIns.transform.right * bulletspeed);
+        gunAnim.SetTrigger("Shoot");
+        cameraRecoil.ShakeCamera();
+        Destroy(bulletIns, 3);
     }
 }
