@@ -66,6 +66,9 @@ TagManager:
   - name: Tangan
     uniqueID: 2204208353
     locked: 0
+  - name: Bullet
+    uniqueID: 4277948429
+    locked: 0
   - name: ground
     uniqueID: 3938342515
     locked: 0

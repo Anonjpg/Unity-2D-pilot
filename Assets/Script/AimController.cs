@@ -1,5 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TMPro;
+using NUnit.Framework;
+using System;
 
 public class AimController : MonoBehaviour
 {
@@ -7,6 +10,7 @@ public class AimController : MonoBehaviour
     public PlayerEquipment playerEquipment;
     public PlayerMovement playerMovement;
     public Animator playerAnimator;
+    public Animator playerAnimReload;
 
     [Header("Aim Pivots")]
     public GameObject aimPivotRight;
@@ -34,9 +38,23 @@ public class AimController : MonoBehaviour
     [Header("shoot")]
     public GameObject bullets;
     public Animator gunAnim;
-    public Transform ShootPoint;
+    public Animator gunAnimLeft;
+    public Transform ShootPointRight;
+    public Transform ShootPointLeft;
     public float bulletspeed;
     public float fireRates;
+
+    [Header("Ammo")]
+    public int magazineAmmo = 8;
+    public int currentAmmo = 8;
+    public int reserveAmmo = 32;
+
+    [Header("Ammo UI")]
+    public TMP_Text ammoText;
+
+    [Header("reload System")]
+    public bool isReloading = false;
+
     float ReadyForNextShot;
     public CameraRecoil cameraRecoil;
 
@@ -45,6 +63,7 @@ public class AimController : MonoBehaviour
     void Start()
     {
         SetAim(false);
+        UpdateAmmoUI();
     }
 
     void Update()
@@ -71,9 +90,15 @@ public class AimController : MonoBehaviour
             }
         }
 
+        if (Keyboard.current[Key.R].wasPressedThisFrame)
+            {
+                Reload();
+                Debug.Log("Reloading...");
+            }
+
         if (IsAiming)
         {
-            if(Input.GetMouseButton(0))
+            if(!isReloading && Input.GetMouseButton(0))
                 {
                     if (Time.time > ReadyForNextShot)
                     {
@@ -82,6 +107,8 @@ public class AimController : MonoBehaviour
                     }
                     
                 }
+            
+
             UpdateAimDirection();
         }
             
@@ -184,10 +211,77 @@ public class AimController : MonoBehaviour
 
     void Shoot()
     {
-        GameObject bulletIns = Instantiate(bullets, ShootPoint.position, ShootPoint.rotation);
-        bulletIns.GetComponent<Rigidbody2D>().AddForce(bulletIns.transform.right * bulletspeed);
-        gunAnim.SetTrigger("Shoot");
+        if (currentAmmo <= 0)
+        {
+            Debug.Log("Ammo habis");
+            return;
+        }
+
+        if (aimMouseRight != null && aimMouseRight.enabled)
+        {
+            GameObject bulletInsRight = Instantiate(bullets, ShootPointRight.position, ShootPointRight.rotation);
+            Vector2 shootDirection = ShootPointRight.right;
+            bulletInsRight.GetComponent<Rigidbody2D>().AddForce(shootDirection * bulletspeed);
+            gunAnim.SetTrigger("Shoot");
+            Destroy(bulletInsRight, 3);
+            currentAmmo--;
+            UpdateAmmoUI();
+        }
+        if (aimMouseLeft != null && aimMouseLeft.enabled)
+        {
+            GameObject bulletInsLeft = Instantiate(bullets, ShootPointLeft.position, ShootPointLeft.rotation);
+            Vector2 shootDirectionLeft = -ShootPointLeft.right;
+            bulletInsLeft.GetComponent<Rigidbody2D>().AddForce(shootDirectionLeft * bulletspeed);
+            gunAnimLeft.SetTrigger("Shoot1");
+            Destroy(bulletInsLeft, 3);
+            currentAmmo--;
+            UpdateAmmoUI();
+        }
+        
         cameraRecoil.ShakeCamera();
-        Destroy(bulletIns, 3);
+       
+    }
+
+    public void UpdateAmmoUI()
+    {
+        if (ammoText != null)
+            {
+                ammoText.text = currentAmmo.ToString("00")
+                    + " / "
+                    + reserveAmmo.ToString("00");
+            }
+    }
+
+    void Reload()
+    {
+        if (isReloading)
+            return;
+        
+        if (currentAmmo >= magazineAmmo)
+        {
+            return;
+        }
+
+        if (reserveAmmo <= 0)
+        {
+            return;
+        }
+
+        isReloading = true;
+        playerAnimReload.SetTrigger("Reload");
+    }
+
+    public void FinishReload()
+    {
+        int ammoNeeded = magazineAmmo - currentAmmo;
+
+        int ammoToReload = Math.Min(ammoNeeded, reserveAmmo);
+
+        currentAmmo += ammoToReload;
+        reserveAmmo -= ammoToReload;
+
+        isReloading = false;
+
+        UpdateAmmoUI();
     }
 }
