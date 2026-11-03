@@ -4,7 +4,8 @@ using System;
 public class PlayerMovement : MonoBehaviour
 {
     float horizontalInput;
-    float moveSpeed = 25f;
+    public float HorizontalInput => horizontalInput;
+    public float moveSpeed = 25f;
     Rigidbody2D rb;
     Animator animator;
     bool isFacingRight = true;
@@ -13,6 +14,7 @@ public class PlayerMovement : MonoBehaviour
     bool isGrounded = false;
     public bool isAiming = false;
     public SpriteRenderer normalBodyRenderer;
+    public AimController aimCont;
 
     void Start()
     {
@@ -50,6 +52,12 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
 
+            return;
+        }
+
+        if (aimCont.isReloading)
+        {
+            rb.linearVelocity = Vector2.zero;
             return;
         }
 

@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 using TMPro;
 using NUnit.Framework;
 using System;
+using System.Collections;
 
 public class AimController : MonoBehaviour
 {
@@ -43,18 +44,27 @@ public class AimController : MonoBehaviour
     public Transform ShootPointLeft;
     public float bulletspeed;
     public float fireRates;
+    public Animator muzzleFlashAnim; 
 
     [Header("Ammo")]
     public int magazineAmmo = 8;
     public int currentAmmo = 8;
     public int reserveAmmo = 32;
 
+    [Header("Recoil")]
+    public float recoilForce = 10f;
+
     [Header("Ammo UI")]
     public TMP_Text ammoText;
 
     [Header("reload System")]
     public bool isReloading = false;
+    public PlayerMovement playerMovementScript;
 
+    [Header("Aim Cooldown")]
+    public float aimCooldown = 10f;
+    private bool isAimCoolDown = false;
+    public Rigidbody2D rb;
     float ReadyForNextShot;
     public CameraRecoil cameraRecoil;
 
@@ -82,7 +92,7 @@ public class AimController : MonoBehaviour
                     return;
                 }
 
-                SetAim(true);
+                ToggleAim();
             }
             else
             {
@@ -93,7 +103,6 @@ public class AimController : MonoBehaviour
         if (Keyboard.current[Key.R].wasPressedThisFrame)
             {
                 Reload();
-                Debug.Log("Reloading...");
             }
 
         if (IsAiming)
@@ -223,6 +232,11 @@ public class AimController : MonoBehaviour
             Vector2 shootDirection = ShootPointRight.right;
             bulletInsRight.GetComponent<Rigidbody2D>().AddForce(shootDirection * bulletspeed);
             gunAnim.SetTrigger("Shoot");
+            if (muzzleFlashAnim != null)
+            {
+                muzzleFlashAnim.SetTrigger("Shoot");
+            }
+            PlayerRecoil(shootDirection);
             Destroy(bulletInsRight, 3);
             currentAmmo--;
             UpdateAmmoUI();
@@ -233,6 +247,7 @@ public class AimController : MonoBehaviour
             Vector2 shootDirectionLeft = -ShootPointLeft.right;
             bulletInsLeft.GetComponent<Rigidbody2D>().AddForce(shootDirectionLeft * bulletspeed);
             gunAnimLeft.SetTrigger("Shoot1");
+            PlayerRecoil(shootDirectionLeft);
             Destroy(bulletInsLeft, 3);
             currentAmmo--;
             UpdateAmmoUI();
@@ -256,7 +271,10 @@ public class AimController : MonoBehaviour
     {
         if (isReloading)
             return;
-        
+
+        if (playerMovementScript.HorizontalInput != 0f)
+            return;
+            
         if (currentAmmo >= magazineAmmo)
         {
             return;
@@ -267,8 +285,10 @@ public class AimController : MonoBehaviour
             return;
         }
 
-        isReloading = true;
-        playerAnimReload.SetTrigger("Reload");
+            isReloading = true;
+            playerAnimReload.SetTrigger("Reload");
+            rb.linearVelocity = Vector2.zero;
+        
     }
 
     public void FinishReload()
@@ -283,5 +303,32 @@ public class AimController : MonoBehaviour
         isReloading = false;
 
         UpdateAmmoUI();
+    }
+
+    void ToggleAim()
+    {
+        if (isAimCoolDown)
+            return;
+
+        isAimCoolDown = true;
+
+        SetAim(!IsAiming);
+
+        StartCoroutine(AimCoolDown());
+    }
+
+    IEnumerator AimCoolDown()
+    {
+        yield return new WaitForSeconds(aimCooldown);
+        isAimCoolDown = false;
+        Debug.Log("Aim cooldown selesai. Sekarang bisa menembak lagi.");
+    }
+
+    void PlayerRecoil(Vector2 shootDirection)
+    {
+        Vector2 recoilDirection = -shootDirection.normalized;
+
+        rb.AddForce(recoilDirection * recoilForce, ForceMode2D.Impulse);
+        Debug.Log("Recoil applied: " + recoilDirection * recoilForce);
     }
 }
