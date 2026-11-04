@@ -68,6 +68,8 @@ public class AimController : MonoBehaviour
     float ReadyForNextShot;
     public CameraRecoil cameraRecoil;
 
+    public MuzzleFlashScript muzzleFlashScriptRight;
+
     public bool IsAiming { get; private set; }
 
     void Start()
@@ -234,8 +236,15 @@ public class AimController : MonoBehaviour
             gunAnim.SetTrigger("Shoot");
             if (muzzleFlashAnim != null)
             {
-                muzzleFlashAnim.SetTrigger("Shoot");
+                muzzleFlashAnim.SetTrigger("MuzzleFlash");
             }
+
+            if (muzzleFlashScriptRight != null)
+            {
+                muzzleFlashScriptRight.Flash();
+                Debug.Log("Muzzle flash triggered.");
+            }
+
             PlayerRecoil(shootDirection);
             Destroy(bulletInsRight, 3);
             currentAmmo--;
@@ -329,6 +338,5 @@ public class AimController : MonoBehaviour
         Vector2 recoilDirection = -shootDirection.normalized;
 
         rb.AddForce(recoilDirection * recoilForce, ForceMode2D.Impulse);
-        Debug.Log("Recoil applied: " + recoilDirection * recoilForce);
     }
 }
