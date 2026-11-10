@@ -15,6 +15,10 @@ public class PlayerMovement : MonoBehaviour
     public bool isAiming = false;
     public SpriteRenderer normalBodyRenderer;
     public AimController aimCont;
+    public AudioSource WalkAudioSource;
+    public AudioClip WalkSfx;
+    public float footstepInterval = 0.5f;
+    private float footstepTimer;
 
     void Start()
     {
@@ -62,6 +66,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         horizontalInput = Input.GetAxis("Horizontal");
+        PlayFootsteps();
         FlipSprite();
 
         if (normalBodyRenderer != null)
@@ -121,5 +126,29 @@ public class PlayerMovement : MonoBehaviour
         Vector3 scale = transform.localScale;
         scale.x = Mathf.Abs(scale.x) * (faceRight ? 1f : -1f);
         transform.localScale = scale;
+    }
+
+    void PlayFootsteps()
+    {
+        if (isAiming || aimCont.isReloading)
+        {
+            footstepTimer = 0;
+            return;
+        }
+
+        if (Math.Abs(horizontalInput) > 0.01f)
+        {
+            footstepTimer += Time.deltaTime;
+
+            if (footstepTimer >= footstepInterval)
+            {
+                WalkAudioSource.PlayOneShot(WalkSfx);
+                footstepTimer = 0;
+            }
+        }
+        else
+        {
+            footstepTimer = 0;
+        }
     }
 }

@@ -45,6 +45,7 @@ public class AimController : MonoBehaviour
     public float bulletspeed;
     public float fireRates;
     public Animator muzzleFlashAnim; 
+    public Animator muzzleFlashAnimLeft;
 
     [Header("Ammo")]
     public int magazineAmmo = 8;
@@ -69,6 +70,12 @@ public class AimController : MonoBehaviour
     public CameraRecoil cameraRecoil;
 
     public MuzzleFlashScript muzzleFlashScriptRight;
+    public MuzzleFlashScript muzzleFlashScriptLeft;
+
+    [Header("Audio")]
+    public AudioSource weaponAudioSource;
+    public AudioClip ShootSfx;
+    public AudioClip ReloadSfx;
 
     public bool IsAiming { get; private set; }
 
@@ -242,9 +249,9 @@ public class AimController : MonoBehaviour
             if (muzzleFlashScriptRight != null)
             {
                 muzzleFlashScriptRight.Flash();
-                Debug.Log("Muzzle flash triggered.");
             }
 
+            weaponAudioSource.PlayOneShot(ShootSfx);
             PlayerRecoil(shootDirection);
             Destroy(bulletInsRight, 3);
             currentAmmo--;
@@ -256,6 +263,18 @@ public class AimController : MonoBehaviour
             Vector2 shootDirectionLeft = -ShootPointLeft.right;
             bulletInsLeft.GetComponent<Rigidbody2D>().AddForce(shootDirectionLeft * bulletspeed);
             gunAnimLeft.SetTrigger("Shoot1");
+
+            if ( muzzleFlashAnimLeft != null)
+            {
+                muzzleFlashAnimLeft.SetTrigger("MuzzleFlashLeft");
+            }
+
+            if (muzzleFlashScriptLeft != null)
+            {
+                muzzleFlashScriptLeft.Flash();
+            }
+
+            weaponAudioSource.PlayOneShot(ShootSfx);
             PlayerRecoil(shootDirectionLeft);
             Destroy(bulletInsLeft, 3);
             currentAmmo--;
@@ -295,6 +314,7 @@ public class AimController : MonoBehaviour
         }
 
             isReloading = true;
+            weaponAudioSource.PlayOneShot(ReloadSfx);
             playerAnimReload.SetTrigger("Reload");
             rb.linearVelocity = Vector2.zero;
         

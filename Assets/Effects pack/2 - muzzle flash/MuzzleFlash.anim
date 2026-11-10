@@ -52,15 +52,15 @@ AnimationClip:
     curve:
     - time: 0.016666668
       value: {fileID: -3220888990493407114, guid: 41b427a09547c440795dc60aea30d378, type: 3}
-    - time: 0.05
+    - time: 0.033333335
       value: {fileID: -6640872826117737539, guid: ff498f6aa16f9428781b4f569854a81c, type: 3}
-    - time: 0.1
+    - time: 0.083333336
       value: {fileID: -3320070530728237008, guid: 56444f605e1334eb29a1182dd32b1507, type: 3}
-    - time: 0.1
+    - time: 0.083333336
       value: {fileID: 209583315810437312, guid: b22c295d30e7b46daaa340d3b0a0ca29, type: 3}
-    - time: 0.13333334
+    - time: 0.1
       value: {fileID: -920247029194517648, guid: 6399b136df8814a858b5bf3d55c72c9e, type: 3}
-    - time: 0.15
+    - time: 0.11666667
       value: {fileID: 3355665096142401963, guid: 1fcdc796473c54d218d5bff175ad1651, type: 3}
     attribute: m_Sprite
     path: pistol/MuzzleFlash
@@ -106,7 +106,7 @@ AnimationClip:
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.16666667
+    m_StopTime: 0.13333334
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
