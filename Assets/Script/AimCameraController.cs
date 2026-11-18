@@ -54,9 +54,7 @@ public class AimCameraController : MonoBehaviour
 
             bool aimingRight = mouseWorld.x >= player.position.x;
 
-            targetScreenPosition = aimingRight
-                ? aimRightScreenPosition
-                : aimLeftScreenPosition;
+            targetScreenPosition = aimingRight ? aimRightScreenPosition : aimLeftScreenPosition;
         }
 
         positionComposer.Composition.ScreenPosition = Vector2.Lerp(

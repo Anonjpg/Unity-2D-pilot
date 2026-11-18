@@ -12,7 +12,7 @@ public class InventoryController : MonoBehaviour
 
     void Start()
     {
-        itemDictionary = FindObjectOfType<ItemDictionary>();
+        itemDictionary = FindAnyObjectByType<ItemDictionary>();
 
         
 
@@ -102,7 +102,7 @@ public class InventoryController : MonoBehaviour
         void SetupSlotReferences()
         {
 
-            InventorySelectionUI ui = FindObjectOfType<InventorySelectionUI>();
+            InventorySelectionUI ui = FindAnyObjectByType<InventorySelectionUI>();
 
             foreach (Transform child in inventoryPanel.transform)
             {

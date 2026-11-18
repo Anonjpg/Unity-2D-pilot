@@ -21,6 +21,7 @@ public class PromptFade : MonoBehaviour
     public void Show()
     {
         shouldShow = true;
+        Debug.Log("ui ditampilkan");
     }
 
     public void Hide()
@@ -32,10 +33,6 @@ public class PromptFade : MonoBehaviour
     {
         float targetAlpha = shouldShow ? 1f : 0f;
 
-        canvasGroup.alpha = Mathf.MoveTowards(
-            canvasGroup.alpha,
-            targetAlpha,
-            fadeSpeed * Time.deltaTime
-        );
+        canvasGroup.alpha = Mathf.MoveTowards(canvasGroup.alpha, targetAlpha, fadeSpeed * Time.deltaTime);
     }
 }

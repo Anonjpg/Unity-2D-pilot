@@ -3,7 +3,8 @@ using UnityEngine;
 public class PlayerItemController : MonoBehaviour
 {
     private InventoryController inventoryController;
-    
+
+    [System.Obsolete]
     void Start()
     {
         inventoryController = FindObjectOfType<InventoryController>();

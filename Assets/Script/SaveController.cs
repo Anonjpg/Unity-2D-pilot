@@ -13,7 +13,7 @@ public class SaveController : MonoBehaviour
     {
         saveLocation = Path.Combine(Application.persistentDataPath, "SaveData.json");
         Debug.Log(Application.persistentDataPath);
-        inventoryController = FindObjectOfType<InventoryController>();
+        inventoryController = FindAnyObjectByType<InventoryController>();
 
         LoadGame();
     }
@@ -65,9 +65,6 @@ public class SaveController : MonoBehaviour
         {
             inventoryController.SetInventoryItem(new List<InventorySaveData>());
         }
-
-        
-        SaveGame();
     }
 
 }

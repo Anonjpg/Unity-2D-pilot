@@ -220,7 +220,7 @@ TrailRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.92793274
+        value: 0.2703972
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -292,6 +292,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a77a13a3f53374ab49e211d8539624fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bullet
-  damage: 25
+  damage: 20
   bulletLifetime: 3
   hitEffectPrefab: {fileID: 536206025226242571, guid: 9501f62de86964aee89c05c285ec232b, type: 3}

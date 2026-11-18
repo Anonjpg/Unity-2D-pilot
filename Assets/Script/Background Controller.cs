@@ -3,6 +3,7 @@ using UnityEngine;
 public class BackgroundController : MonoBehaviour
 {
     private float startPos;
+    private float startCameraPos;
 
     public GameObject cam;
     public float parallaxEffect;
@@ -12,9 +13,10 @@ public class BackgroundController : MonoBehaviour
     void Start()
     {
         startPos = transform.position.x;
+        startCameraPos = cam.transform.position.x;
     }
 
-    void LateUpdate()
+    void FixedUpdate()
     {
         if (!parallaxActive)
             return;

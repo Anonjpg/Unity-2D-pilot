@@ -20,6 +20,8 @@ public class PlayerMovement : MonoBehaviour
     public float footstepInterval = 0.5f;
     private float footstepTimer;
 
+    public bool isFinishing = false;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -28,6 +30,14 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        if (isFinishing)
+        {
+            horizontalInput = 0f;
+            animator.SetFloat("xVelocity", 0);
+            animator.SetFloat("yVelocity", 0);
+            return;
+        }
+
         if (isAiming)
         {
             horizontalInput = 0f;
@@ -89,6 +99,16 @@ public class PlayerMovement : MonoBehaviour
 
     void isRunning()
     {
+        if (isFinishing)
+        {
+            horizontalInput = 0f;
+
+            animator.SetFloat("xVelocity", 0f);
+            animator.SetFloat("yVelocity", 0f);
+            
+            return;
+        }
+        
         if (isAiming)
         {
             horizontalInput = 0f;

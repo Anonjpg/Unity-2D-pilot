@@ -10,9 +10,7 @@ public class PopUpController : MonoBehaviour
 
    void Update()
     {
-          bool canShowPrompt =
-            playerinRange &&
-            promptFade != null;
+          bool canShowPrompt = playerinRange && promptFade != null;
 
         if (promptFade != null)
         {
